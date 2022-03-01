@@ -1,0 +1,69 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+<div class="main-panel">
+    <div class="content-wrapper">
+      <h3 class="page-title"></h3>
+        <form action="/home/" method="post">{% csrf_token %}
+          <button class="btn btn-outline-secondary btn-md">Volver</button>
+        </form>
+        <br>
+      <div class="row ">
+       <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+             <h4 class="card-title text-primary">Nuevo producto</h4>
+            <form  name="f" class="forms-sample" action="/guardarProducto/" method="POST">{% csrf_token %}
+              <div class="form-group row">
+                <label for="exampleInputMobile" class="col-sm-3 col-form-label">Nombre</label>
+                <div class="col-sm-9">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control text-white" name="producto" required>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="exampleInputMobile" class="col-sm-3 col-form-label">Marca</label>
+                <div class="col-sm-9">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control text-white" name="marca">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="exampleInputMobile" class="col-sm-3 col-form-label">Categoria</label>
+                <div class="col-sm-9">
+                  <select class="form-control text-white" name="categoria" onchange="cambia_categoria()">
+                  <option value="0" required>Seleccione..</option>
+                  {% for c in categorias %}
+                    <option value="{{ c.userCategoria.idcategoria }}">{{ c.userCategoria.categoria }}</option>
+                  {% endfor %}
+                </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="exampleInputMobile" class="col-sm-3 col-form-label">Subcategoria</label>
+                <div class="col-sm-9">
+                  <select class="form-control text-white" name="subCategoria" onchange="cambia_categoria()">
+                  <option value="0" required>-</option>
+                  {% for c in categorias %}
+                    <option value="{{ c.userCategoria.idcategoria }}">{{ c.userCategoria.categoria }}</option>
+                  {% endfor %}
+                </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="exampleInputMobile" class="col-sm-3 col-form-label"></label>
+                <div class="form-check form-check-flat form-check-warning">
+                  <div class="col-sm-12">
+                    <label class="form-check-label">
+                      <input type="checkbox" class="form-check-input" name="banco">Banco
+                    </label>
+                  </div>
+                </div>
+              </div>
+                <button type="submit" class="btn btn-outline-primary mr-2">Guardar</button>
+            </form>
+          </div>
+        </div>
+      </div>

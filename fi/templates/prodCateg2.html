@@ -1,0 +1,38 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+ <div class="main-panel">
+    <div class="content-wrapper">
+<div class="row">
+  {% for c in categorias %}
+    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-9">
+            <div class="d-flex align-items-center align-self-start">
+              <h5 class="mb-0"><a style="color:{{ c.rgb }};" href="/categoria/{{ c.userCategoria.idcategoria }}/">{{c.userCategoria.categoria}}</h5></a>
+            </div>
+          </div>
+          <div class="col-3">
+            <div style="color:{{ c.rgb }};">
+              <span class="mdi  mdi-chart-line icon-item"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+</div>
+    <!-- content-wrapper ends -->
+    <!-- partial:partials/_footer.html -->
+    <footer class="footer">
+    </footer>
+    <!-- partial -->
+  </div>
+</div>
+</div>
+  </body>
+</html>

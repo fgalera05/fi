@@ -1,0 +1,101 @@
+{% load humanize %}
+
+<div class="row">
+  <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-9">
+            <div class="d-flex align-items-center align-self-start">
+              <h3 class="mb-0">{{ dolarCompra|intcomma }} - {{ dolarVenta|intcomma }}</h3>
+              {% if dif < 0%}
+                <p class="text-danger ml-2 mb-0 font-weight-medium">{{ dif }}</p>
+              {% else %}
+                <p class="text-success ml-2 mb-0 font-weight-medium">{{ dif }}</p>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="icon icon-box-primary ">
+             <span class="mdi mdi-cash icon-item"></span>
+            </div>
+          </div>
+        </div>
+        <a style="color:#ffffff;" href="/nuevoCambio/"><h6 class="text-muted font-weight-normal">BLUE</h6></a>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-9">
+            <div class="d-flex align-items-center align-self-start">
+              <h3 class="mb-0">{{ dolarOficial|intcomma}}</h3>
+              <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="icon icon-box-success">
+              <span class="mdi mdi-credit-card icon-item"></span>
+            </div>
+          </div>
+        </div>
+        <h6 class="text-muted font-weight-normal">OF + IMP</h6>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-9">
+            <div class="d-flex align-items-center align-self-start">
+              <a style="color:#ffffff;" href="/presupuestacion/res/"><h3 class="mb-0">{{ next|intcomma}}</h3></a>
+              {% if next > tope %}
+                <p class="text-danger ml-2 mb-0 font-weight-medium">:(</p>
+              {% else %}
+                <p class="text-success ml-2 mb-0 font-weight-medium">:)</p>
+              {% endif %}
+            </div>
+          </div>
+          {% if next < tope %}
+            <div class="col-3">
+              <div class="icon icon-box-danger">
+                <span class="mdi mdi-heart icon-item"></span>
+              </div>
+            </div>
+          {% else %}
+            <div class="col-3">
+              <div class="icon icon-box-danger">
+                <span class="mdi mdi-heart-broken icon-item"></span>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+        <h6 class="text-muted font-weight-normal">{{ nextDif|intcomma }}</h6>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div  class="row">
+          <div class="col-9">
+            <div class="d-flex align-items-center align-self-start">
+              <a style="color:#ffffff;" href="/presupuestacion/bk/"><h3 class="mb-0">{{ bk|intcomma}}</h3></a>
+              <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="icon icon-box-warning ">
+              <span class="mdi  mdi-timer-sand icon-item"></span>
+            </div>
+          </div>
+        </div>
+        <h6 id="res" class="text-muted font-weight-normal">BK</h6>
+      </div>
+    </div>
+
+  </div>
+  </div >

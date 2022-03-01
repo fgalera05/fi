@@ -1,0 +1,112 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+  <div class="main-panel">
+    <div class="content-wrapper">
+      <h3 class="page-title"></h3>
+        <form action="/res/{{ anio }}/{{ mes }}/0" method="get">
+          <button class="btn btn-outline-secondary btn-md">Volver</button>
+        </form>
+        <br>
+           <div id="mov" class="row ">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">{{ categoria }} - [ $ {{ total|intcomma }} ]</h4>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Fecha</th>
+                          <th>Prod</th>
+                          <th>Cant</th>
+                          <td>Com</td>
+                          <th>Total</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for mov in movimientos %}
+                          <tr>
+                            <td>
+                            {% if mov.tipo == 1%}
+                                <div class="text-success ml-2 mb-0 font-weight-medium">+</div>
+                              {% else %}
+                                <div class="text-danger ml-2 mb-0 font-weight-medium">-</div>
+                              {% endif%}
+                            <td>
+                              {{ mov.fecha}}
+                            </td>
+                            <td>
+                              {{ mov.producto.nombreproducto }}
+                            </td>
+                            <td>
+                              {{ mov.cantidad|intcomma}}
+                            </td>
+                            <td>
+                              {{ mov.comercio.comercio }}
+                            </td>
+                            <td>
+                              $ {{ mov.total |intcomma}}
+                            </td>
+                            <td>
+                              {% if mov.notas is not None %}
+                                {{ mov.notas }}
+                              {% endif %}
+                            </td>
+                          </tr>
+                         {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% if grafico %}
+        <div class="row">
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+              <h4 class="card-title">{{ categoria }}</h4>
+                <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                  <canvas id="myChart" width="80" height="80"></canvas>
+                  <script>
+                    const labels = [];
+                    const data = {
+                      labels:{{ nombresTorta|safe}},
+                      datasets: [{
+                        label: '',
+                         backgroundColor: {{ coloresTorta|safe }},
+                        data: {{ coloresPorc|safe }},
+                        borderColor: ['rgb(0,0,0)'
+                      ],
+                      }],
+                    };
+                    const config = {
+                      type: 'doughnut',
+                      data: data,
+                      options: {}
+                    };
+                  </script>
+                  <script>
+                    const myChart = new Chart(
+                      document.getElementById('myChart'),
+                      config
+                    );
+                  </script>
+            </div>
+          </div>
+        </div>
+        {%endif %}
+          <!-- content-wrapper ends -->
+          <!-- partial:partials/_footer.html -->
+          <footer class="footer">
+          </footer>
+          <!-- partial -->
+        </div>
+      </div>
+      </div>
+  </body>
+</html>

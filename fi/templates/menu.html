@@ -1,0 +1,258 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>BitOinK</title>
+    <link rel="stylesheet" href="{https://cdnjs.com/libraries/Chart.js">
+    <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendor.bundle.base.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/jvectormap/jquery-jvectormap.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/flag-icon-css/css/flag-icon.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/owl-carousel-2/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/owl-carousel-2/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>s
+  </head>
+  <body>  
+   <div class="container-scroller">
+      <nav class="sidebar sidebar-offcanvas" id="sidebar" >
+        <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top ">
+        </div>
+        <ul class="nav">
+          <li class="nav-item profile">
+            <div class="profile-desc">
+              <div class="profile-pic">
+            </div>
+          </li>
+          <li class="nav-item nav-category">
+            <span class="nav-link"></span>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="/home/">
+              <span class="menu-icon">
+                <i class="mdi mdi-home"></i>
+              </span>
+              <span class="menu-title">Home</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="/dolar/">
+              <span class="menu-icon">
+                <i class="mdi mdi-cash"></i>
+              </span>
+              <span class="menu-title">Dolar</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+              <a class="nav-link" data-toggle="collapse" href="#auth8" aria-expanded="false" aria-controls="auth">
+                <span class="menu-icon">
+                  <i class="mdi mdi-chart-line"></i>
+                </span>
+                <span class="menu-title">Proyectar</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="auth8">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"> <a class="nav-link" href="/presupuestacion/res">Resumen</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="/presupuestacion/fijos">Fijos</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="/presupuestacion/cards">Tarjetas</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="/presupuestacion/others">Otros</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="/presupuestacion/bk">Bk</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item menu-items">
+              <a class="nav-link" data-toggle="collapse" href="#auth12" aria-expanded="false" aria-controls="auth">
+                <span class="menu-icon">
+                  <i class="mdi mdi-eye-off"></i>
+                </span>
+                <span class="menu-title">Visibilidad</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="auth12">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"> <a class="nav-link" href="/config/fijos/">Fijos</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="/config/tarjeta/">Mis tarjetas</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="/config/categorias/">Categorias</a></li>
+                </ul>
+              </div>
+            </li>
+           <li class="nav-item menu-items">
+            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+              <span class="menu-icon">
+                <i class="mdi mdi-chart-bar"></i>
+              </span>
+              <span class="menu-title">Categorias</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/nuevaCategoria/">Nueva categoria</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/categorias/">Comparativo</a></li>
+              </ul>
+            </div>
+          </li>
+           <li class="nav-item menu-items">
+            <a class="nav-link" data-toggle="collapse" href="#auth2" aria-expanded="false" aria-controls="auth">
+              <span class="menu-icon">
+                <i class="mdi mdi-chart-line"></i>
+              </span>
+              <span class="menu-title">Productos</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth2">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/nuevoProducto/">Nuevo producto</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/prodCateg/">Precios</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" data-toggle="collapse" href="#auth3" aria-expanded="false" aria-controls="auth">
+              <span class="menu-icon">
+                <i class="mdi mdi-store"></i>
+              </span>
+              <span class="menu-title">Comercios</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth3">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/nuevoComercio/">Nuevo comercio</a></li>
+              </ul>
+            </div>
+          </li>
+           <li class="nav-item menu-items">
+            <a class="nav-link" href="/gastacion/">
+              <span class="menu-icon">
+                <i class="mdi mdi-chart-pie"></i>
+              </span>
+              <span class="menu-title">Gastación</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+              <a class="nav-link" data-toggle="collapse" href="#auth6" aria-expanded="false" aria-controls="auth">
+                <span class="menu-icon">
+                  <i class="mdi mdi-map-marker-radius"></i>
+                </span>
+                <span class="menu-title">Movilidad</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="auth6">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"> <a class="nav-link" href="/movilidad/auto/">Auto</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="/movilidad/moto/">Moto</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="/movilidad/publico/">Publico</a></li>
+                </ul>
+              </div>
+            </li>
+          <li class="nav-item menu-items">
+              <a class="nav-link" data-toggle="collapse" href="#auth7" aria-expanded="false" aria-controls="auth">
+                <span class="menu-icon">
+                  <i class="mdi mdi-settings"></i>
+                </span>
+                <span class="menu-title">Configuración</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="auth7">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"> <a class="nav-link" href="/config/productos/">Productos</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="/config/varios/">Varios</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="/config/tarjetas/">Tarjetas</a></li>
+                </ul>
+              </div>
+            </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="/logout_view/">
+              <span class="menu-icon">
+                <i class="mdi mdi-logout"></i>
+              </span>
+              <span class="menu-title">LogOut</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+         <nav class="navbar p-0 fixed-top d-flex flex-row">
+          <div class="navbar-brand-wrapper d-flex d-lg-none align-items-rigth justify-content-rigth">
+          </div>
+          <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+            <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+              <span class="mdi mdi-menu"></span>
+            </button>
+            <ul class="navbar-nav navbar-nav-right">
+              {% if arrow %}
+              <li class="nav-item border">
+                <a class="nav-link" href="/fi/res/{{ anio }}/{{ mes }}/2/#res">
+                  <i class="mdi mdi-arrow-left-bold"></i>
+                </a>
+              </li>
+               <li class="nav-item border">
+                <a class="nav-link" href="/fi/res/{{ anio }}/{{ mes }}/1/#res">
+                  <i class="mdi mdi-arrow-right-bold"></i>
+                </a>
+              </li>
+              {% endif %}
+              {% if guardar %}
+                <li class="nav-item">
+                  <div class="icon icon-box ">
+                    <form action="/guardarPresupuesto/" method="post">{% csrf_token %}
+                      <button class="btn btn-outline-warning btn-md">Guardar</button>
+                  </div>
+                </li>
+              {% endif %}
+              {% if guardarConfig %}
+                <li class="nav-item">
+                  <div class="icon icon-box ">
+                    <form action="/guardarConfig/" method="post">{% csrf_token %}
+                      <button class="btn btn-outline-success btn-md">Guardar</button>
+                  </div>
+                </li>
+              {% endif %}
+              <li class="nav-item">
+                <a class="nav-link" href="/home/">
+                  <div class="icon icon-box ">
+                    <span class="mdi mdi-home icon-item"></span>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item dropdown border-rigth">
+                <a class="nav-link count-indicator dropdown-toggle" href="/nuevoMovimiento/1">
+                  <i class="mdi mdi-plus-circle-outline"></i>
+                  <span class="count bg-success"></span>
+                </a>
+              </li>
+              <li class="nav-item dropdown border-rigth">
+                <a class="nav-link count-indicator dropdown-toggle" href="/nuevoMovimiento/2">
+                  <i class="mdi mdi-minus-circle-outline"></i>
+                  <span class="count bg-danger"></span>
+                </a> 
+              </li>
+              <li class="nav-item dropdown border-rigth">
+                <a class="nav-link count-indicator dropdown-toggle" href="/logout_view/">
+                  <i class="mdi mdi-logout danger"></i>
+                </a> 
+              </li>
+            </ul>
+            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+              <span class="mdi mdi-format-line-spacing"></span>
+            </button>
+          </div>
+        </nav>
+    <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
+    <script src="{% static 'assets/vendors/progressbar.js/progressbar.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+    <script src="{% static 'assets/vendors/owl-carousel-2/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'assets/js/off-canvas.js' %}"></script>
+    <script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
+    <script src="{% static 'assets/js/misc.js' %}"></script>
+    <script src="{% static 'assets/js/settings.js' %}"></script>
+    <script src="{% static 'assets/js/todolist.js' %}"></script>
+   	<script src="{% static 'assets/js/dashboard.js' %}"></script>
+  

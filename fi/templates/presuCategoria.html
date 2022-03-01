@@ -1,0 +1,84 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+  <div class="main-panel">
+    <div class="content-wrapper">
+      <h3 class="page-title"></h3>
+        <form action="/presupuesto/{{ anio }}/{{ mes }}/" method="get">
+          <button class="btn btn-outline-secondary btn-md">Volver</button>
+        </form>
+        <br>
+     <br>
+     <div id="mov" class="row ">
+      <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Presupuesto: {{ categoria }} - [ $ {{ total|intcomma }} ]</h4>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th>Fecha</th>
+                            <th>Prod</th>
+                            <th>Cant</th>
+                            <th>Total</th>
+                            <th></th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for mov in movimientos %}
+                            <tr>
+                              <td>
+                              {% if mov.tipo == 1%}
+                                  <div class="text-success ml-2 mb-0 font-weight-medium">+</div>
+                                {% else %}
+                                  <div class="text-danger ml-2 mb-0 font-weight-medium">-</div>
+                                {% endif%}
+                              <td>
+                                {{ mov.fecha}}
+                              </td>
+                              <td>
+                                {{ mov.producto.nombreproducto }}
+                              </td>
+                              <td>
+                                {{ mov.cantidad|intcomma}}
+                              </td>
+                              <td>
+                                $ {{ mov.total|intcomma }}
+                              </td>
+                              <td>
+                                {% if mov.categoria.pago %}
+                                  $ {{ mov.categoria.gastos|intcomma}}
+                                  <i style="color:#32CD32;" class="mdi mdi-check-all"></i>
+                                  
+                                {% endif %}
+                              </td>
+                           
+                            </tr>
+                           {% endfor %}
+                        </tbody>
+                      </table>
+                      <script type="text/javascript">
+                        var elems = document.getElementsByClassName('confirmation');
+                        var confirmIt = function (e) {
+                            if (!confirm('Esta seguro de eliminar?')) e.preventDefault();
+                        };
+                        for (var i = 0, l = elems.length; i < l; i++) {
+                            elems[i].addEventListener('click', confirmIt, false);
+                        }
+                    </script>
+                    </div>
+                  </div>
+                </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:partials/_footer.html -->
+            <footer class="footer">
+            </footer>
+            <!-- partial -->
+          </div>
+        </div>
+        </div>
+  </body>
+</html>

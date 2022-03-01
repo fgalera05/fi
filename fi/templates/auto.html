@@ -1,0 +1,49 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+<div class="main-panel">
+  <div class="content-wrapper">
+ <div id="mov" class="row ">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title text-primary">{{ movil }}</h4>
+        <div class="table-responsive">
+        <div class="table-responsive">
+          <table class="table">
+            <tr>
+              <td></td>
+              {% for a in anios %}
+                <td class="text-warning">{{ a }}</td>
+              {% endfor %}
+              </tr>
+              {% for car in auto %}
+               <tr>
+                <td class="text-muted">{{ car.prod.nombreproducto }}</td>
+                {% for i in car.lista %}
+                  {% if i == 0 %}
+                    <td></td>
+                  {% elif i < 0 %}
+                    <td class="text-danger">{{ i|intcomma|cut:'-' }}</td>
+                  {% else %}
+                      <td class="text-success">{{ i|intcomma }}</td>
+                  {% endif %}
+                {% endfor%}
+                 </tr>
+              {% endfor %}
+              <td></td>
+              {% for a in suma %}
+                {% if a == 0 %}
+                  <td></td>
+                {% else %}
+                  <td class="text-primary">{{ a|intcomma }}</td>
+                {% endif %}
+              {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+      

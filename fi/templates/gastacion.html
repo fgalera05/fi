@@ -1,0 +1,130 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row">
+              <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Categorias</h4>
+                    <canvas id="myChart" width="100" height="25px"></canvas>
+                      <script>
+                      const ctx = document.getElementById('myChart');
+                      const myChart2 = new Chart(ctx, {
+                          type: 'pie',
+                          data: {
+                              labels: {{ nombres|safe}},
+                              datasets: [{
+                                  label: '',
+                                  fill: false,
+                                  backgroundColor: {{ rgb|safe }},
+                                  data: {{ valores|safe }},
+                                  borderWidth: 1
+                              },
+                            ]
+                          },
+                          
+                      });
+                      </script>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Fijos</h4>
+                    <canvas id="myChart2" width="100" height="25"></canvas>
+                      <script>
+                      const ctx2 = document.getElementById('myChart2');
+                      const myChart3 = new Chart(ctx2, {
+                          type: 'doughnut',
+                          data: {
+                              labels: {{ nom|safe}},
+                              datasets: [{
+                                  label: 'Blue',
+                                  fill: false,
+                                  backgroundColor: {{ color|safe }},
+                                  data: {{ val|safe }},
+                                  borderWidth: 1
+                              },
+
+                            ]
+                          },
+                          
+                      });
+                      </script>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Varios</h4>
+                    <canvas id="myChart3" width="100" height="25"></canvas>
+                      <script>
+                      const ctx3 = document.getElementById('myChart3');
+                      const myChart4 = new Chart(ctx3, {
+                          type: 'doughnut',
+                          data: {
+                              labels: {{ nomVarios|safe}},
+                              datasets: [{
+                                  label: 'Blue',
+                                  fill: false,
+                                  backgroundColor: {{ colorVarios|safe }},
+                                  data: {{ valVarios|safe }},
+                                  borderWidth: 1
+                              },
+
+                            ]
+                          },
+                          
+                      });
+                      </script>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Productos</h4>
+                    <canvas id="myChart4" width="100" height="25"></canvas>
+                      <script>
+                      const ctx4 = document.getElementById('myChart4');
+                      const myChart5 = new Chart(ctx4, {
+                          type: 'doughnut',
+                          data: {
+                              labels: {{ nomProductos|safe}},
+                              datasets: [{
+                                  label: 'Blue',
+                                  fill: false,
+                                  backgroundColor: {{ colorProductos|safe }},
+                                  data: {{ valProductos|safe }},
+                                  borderWidth: 1
+                              },
+
+                            ]
+                          },
+                          
+                      });
+                      </script>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <footer class="footer">
+            
+          </footer>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+   
+  </body>
+</html>

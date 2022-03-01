@@ -1,0 +1,106 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+<div class="main-panel">
+    <div class="content-wrapper">
+      <div class="row ">
+       <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            {%if tipo == 1 %}
+             <h4 class="card-title text-success">Ingreso</h4>
+            {% else %}
+             <h4 class="card-title text-danger">Gasto <a style="color:#ffffff;" href="/tck/2"> | Tck</a></h4></h4>
+            {% endif %}
+            <form  name="f" class="forms-sample" action="/guardarMov/" method="POST">{% csrf_token %}
+              <div class="form-group">
+                <input type="date" name="fecha" class="text-dark" value="{{ anio }}-{{ mes }}-{{ dia }}">
+                 {%if tipo == 1 %}
+                 <input name="tipo" type="hidden" value="1">
+                 {% else %}
+                 <input name="tipo" type="hidden" value="2">
+                 {% endif %}
+              </div>
+              <div class="form-group row">
+                <label for="exampleInputEmail2" class="col-sm-3 col-form-label ">Comercio</label>
+                <div class="col-sm-9">
+                  <select class="form-control text-white" name="com">
+                    {% for c in comercios %}
+                    <option value="{{ c.idcomercio }}">{{ c.comercio }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Categoria</label>
+                <div class="col-sm-9">
+                  <select class="form-control text-white" name="categorias" onchange="cambia_categoria()">
+                    <option value="-">Seleccione...</option> 
+                    {% for c in userCategorias %}
+                    <option value="{{ c.userCategoria.idcategoria }}">{{ c.userCategoria.categoria }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Productos</label>
+                <div class="col-sm-9">
+                  <select class="form-control text-white" name="producto">
+                    <option value="0"></option>
+                  </select>
+                </div>
+              </div>
+              <script>
+                var categ = {{ productosCat|safe }}                 
+                function cambia_categoria(){ 
+                  var cat
+                  cat = document.f.categorias[document.f.categorias.selectedIndex].value
+                    if (cat != 0) { 
+                      mis_categorias=categ[cat]
+                      num_categorias = mis_categorias.length 
+                      document.f.producto.length = num_categorias
+                      for(i=0;i<num_categorias;i++){ 
+                        document.f.producto.options[i].value=mis_categorias[i] 
+                        document.f.producto.options[i].text=mis_categorias[i] 
+                        
+                      } 
+                  }else{ 
+                      document.f.producto.length = 1 
+                      document.f.producto.options[0].value = "-" 
+                      document.f.producto.options[0].text = "-" 
+                  } 
+
+                document.f.producto.options[0].selected = true 
+                }
+            </script>
+              <div class="form-group row">
+                <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Cant.</label>
+                <div class="col-sm-9">
+                  <input type="number" class="form-control text-white" name="cant" value="1" required>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="exampleInputMobile" class="col-sm-3 col-form-label">Precio</label>
+                <div class="col-sm-9">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text btn-outline-primary text-white">$</span>
+                    </div>
+                    <input type="number" class="form-control text-muted" name="precio" value="0.00" required>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="exampleTextarea1">Notas</label>
+                <textarea class="form-control text-white" name="notas" rows="3"></textarea>
+              </div>
+              {%if tipo == 1 %}
+                <button type="submit" name="boton" class="btn btn-outline-success mr-2" value="guardar">Guardar</button>
+              {% else %}
+                <button type="submit" name="boton" class="btn btn-outline-danger mr-2" value="guardar">Guardar</button>
+              {% endif %}   
+                <button type="submit" class="btn btn-outline-light" name="boton" value="cancelar">Cancelar</button>
+            </form>
+          </div>
+        </div>
+      </div>

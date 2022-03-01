@@ -1,0 +1,162 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+  <div class="main-panel">
+    <div class="content-wrapper">
+    {% if mes == mesHoy and anio == anioHoy %}
+      {% include 'indicadores.html' %}
+    {% endif%}
+      <div class="row">
+        <div class="col-md-4 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <table width="100%" cellpadding="25" cellpadding="4">
+                <tbody>
+                  <tr>
+                    <td colspan="20" align="center">
+                      <h4  class="card-title">
+                      {% if anio != anioHoy %}
+                        {{ fecha|date:"F Y"}}
+                      {% else %}
+                        {{ fecha|date:"F"}}
+                      {% endif %}
+                      </h4>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="col">
+                <div class="progress">
+                  <div class="progress-bar bg-success" role="progressbar" style="width:{% widthratio saldo ing 100 %}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                   <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio egr ing 100 %}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                <div class="text-md-center text-xl-left">
+                  <h6 class="mb-1"><a style="color:#ffffff;" href="/presupuesto/{{ anio }}/{{ mes }}">Presupuesto</h6></a>
+                  <p class="text-muted mb-0">{{porcIng}}%</p>
+                </div>
+                <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
+                  <h6 class="text">$ {{ ing|intcomma }}</h6>
+                </div>
+              </div>
+              <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                <div class="text-md-center text-xl-left">
+                  <h6 class="mb-1"><a style="color:#ffffff;" href="/movimientos/{{ anio}}/{{mes}}/2">Gastos</h6></a>
+                  <p class="text-muted mb-0">{{porcEgr}} %</p>
+                </div>
+                <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
+                  <h6 class="text-warning">$ {{ egr|intcomma }}</h6>
+                </div>
+              </div>
+              <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                  <div class="text-md-center text-xl-left">
+                    <h6 class="mb-1">Disponible</h6>
+                  </div>
+                  <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
+                  {% if saldo >= 0%}
+                    <h6 class="text-success">
+                  {% else %}
+                    <h6 class="text-danger">
+                  {% endif %}
+                   $ {{ saldo|intcomma }}</h6></div>
+                </div>
+                 <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                <canvas id="myChart2" width="80" height="80"></canvas>
+              <script>
+                const labels = [
+                ];
+
+                const data = {
+                  labels:{{ nombresTorta|safe}},
+                  datasets: [{
+                    label: '',
+                     backgroundColor: {{ coloresTorta|safe }},
+                    data: {{ coloresPorc|safe }},
+                    borderColor: ['rgb(0,0,0)'
+                  ],
+                  }],
+                };
+
+                const config = {
+                  type: 'doughnut',
+                  data: data,
+                  options: {}
+                };
+
+              </script>
+              <script>
+                const myChart = new Chart(
+                  document.getElementById('myChart2'),
+                  config
+                );
+              </script>
+            </div>
+            </div>
+
+          </div>
+         
+        </div>
+        <div id="cat" class="col-md-8 grid-margin stretch-card">
+          <div class="card">
+            <div class="col-lg-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+
+              <h4  class="card-title">
+              <a style="color:#ffffff;" href="/movimientos/{{ anio}}/{{mes}}/0">Movimientos</a></h4>
+              <p class="card-description"></p>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Categoria</th>
+                      <th></th>
+                      <th>Saldo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for c in categorias %}
+                      <tr>
+                        <td><a style="color:#ffffff;" href="/gastos/{{ c.userCategoria.idcategoria }}/{{ anio}}/{{mes}}">{{ c.userCategoria.categoria }}</td></a>
+                        <td width="50%">
+                          <div class="progress">
+                            {% if c.userCategoria.saldo >= 0 %}
+                              <div class="progress-bar bg-{{ c.userCategoria.barra }}" role="progressbar" style="width:{% widthratio c.userCategoria.saldo c.userCategoria.presupuesto 100 %}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{% widthratio c.userCategoria.saldo c.userCategoria.presupuesto 100 %}%</div>
+                            {% else %}
+                              <div class="progress-bar bg-danger" role="progressbar" style="width:0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            {% endif %}
+                          </div>
+                        </td>
+                        {% if c.userCategoria.saldo < 0%}
+                          <td class="text-danger"> 
+                        {% elif c.userCategoria.saldo == 0 and c.userCategoria.gastos != 0 %}
+                          <td class="text-warning">
+                        {% else%}
+                          <td>
+                        {% endif %}
+                          $ {{ c.userCategoria.saldo|intcomma }}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+ 
+   
+  
+    <!-- content-wrapper ends -->
+    <!-- partial:partials/_footer.html -->
+    <footer class="footer">
+    </footer>
+    <!-- partial -->
+  </div>
+</div>
+</div>
+  </body>
+</html>

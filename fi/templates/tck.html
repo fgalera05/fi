@@ -1,0 +1,209 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+    <div class="main-panel">
+      <div class="content-wrapper">
+        <h3 class="page-title"></h3>
+        <form action="/nuevoMovimiento/{{ tipo }}/" method="post">{% csrf_token %}
+          <button class="btn btn-outline-secondary btn-md">Volver</button>
+        </form>
+        <br>
+        <div class="row">
+          <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                 <form class="form-horizontal" name="guardar_comercio" action='/guardarTCK/{{ tipo }}' role="form" id="datos_nota" method="POST">{% csrf_token %}
+                  <div id="print-area">
+                    <div class="row ">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                          <h4>Fecha:</h4>
+                            <div class="form-group">
+                              <input type="date" name="fecha" class="text-dark" value="" required>
+                              {%if tipo == 1 %}
+                               <input name="tipo" type="hidden" value="1">
+                              {% else %}
+                               <input name="tipo" type="hidden" value="2">
+                              {% endif %}
+                            </div>
+                        </div>     
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                          <h4>Comercio:</h4>
+                           <div class="form-group row">
+                            <div class="col-lg-12 col-md-6 col-sm-6">
+                              <select class="form-control text-white" name="com" id="com" onchange="cambia_comercio()">
+                              {% for c in comercios %}
+                                <option value="{{ c.idcomercio }}">{{ c.comercio }}</option>
+                              {% endfor %}
+                              </select>
+                            </div>
+                        </div>
+                    </div> 
+                  </div>
+                <div class="row">
+                  <hr/>
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                      <div class="table-responsive">
+                        <table class="table table-striped  table-hover">
+                          <thead>
+                            <tr>
+                              <th >Producto</th>
+                              <th >Categoría</th>
+                              <th >Cant.</th>
+                              <th >Precio</th>
+                              <th>Nota</th>
+                            </tr>
+                            {% for t in tmp %}
+                            <tr class="text-warning">
+                              <td>{{ t.producto.nombreproducto }}</td>
+                              <td>{{ t.categoria.categoria }}</td>
+                              <td>{{ t.cantidad }}</td>
+                              <td>{{ t.total }}</td>
+                              <td>{{ t.notas }}</td>
+                              <td>
+                                <a style="color:#FF0000;" href="/borrarItem/{{ t.idTempt }}/{{ tipo }}/" class="confirmation"><i class="mdi mdi-delete"></i></a>
+                              </td>
+                            <tr>
+                            {% endfor %}
+                              <td colspan='6'>
+                               <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> Agregar</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan='3' class='text-right'>
+                                <h4>TOTAL</h4>
+                              </td>
+                              <th class='text-left text-warning'>
+                                <h4>{{ total|intcomma}}</h4>
+                              </th>
+                              <td></td>
+                            </tr>
+                              </thead>
+                              <tbody class='items'></tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="row pad-bottom  pull-right">
+                  <div class="col-lg-12 col-md-12 col-sm-12">
+                    <button type="submit" class="btn btn-outline-danger mr-2" name="boton" value="cancelar">Cancelar</button>
+                    <button type="submit" class="btn btn-outline-success mr-2" name="boton" value="guardar">Guardar</button>
+                  </div>
+                </div>
+              </form>
+
+    <form class="form-horizontal" name="guardar_items" id="guardar_item" method="post" action="/guardarItem/">{% csrf_token %}
+      <input type="hidden" name="com_aux" value='28' id="com_aux">
+      <!--<input type="" name="com_aux" value='' id="fecha_aux">-->
+      {%if tipo == 1 %}
+       <input name="tipo" type="hidden" value="1">
+      {% else %}
+       <input name="tipo" type="hidden" value="2">
+      {% endif %}
+      <!-- Modal -->
+      <div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel"></h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+            <div class="col-md-9">
+              <label>Categoria</label>
+                <select class="form-control text-white" name="categorias" onchange="cambia_categoria()">
+                  <option value="#" required>Seleccione..</option>
+                  {% for c in userCategorias %}
+                  <option value="{{ c.userCategoria.idcategoria }}">{{ c.userCategoria.categoria }}</option>
+                  {% endfor %}
+                </select>
+            </div>
+            </div>
+              <div class="row">
+                <div class="col-md-9">
+                <br>  
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-9">
+                  <label>Producto</label>
+                    <select class="form-control text-white" name="producto">
+                    <option value="0"></option>
+                  </select> 
+                </div>
+              </div>
+              <script>
+                var categ = {{ productosCat|safe }}                 
+                function cambia_categoria(){ 
+                var cat
+                cat = document.guardar_items.categorias[document.guardar_items.categorias.selectedIndex].value
+                  if (cat != 0) { 
+                    mis_categorias=categ[cat]
+                    num_categorias = mis_categorias.length 
+                    document.guardar_items.producto.length = num_categorias
+                    for(i=0;i<num_categorias;i++){ 
+                      document.guardar_items.producto.options[i].value=mis_categorias[i] 
+                      document.guardar_items.producto.options[i].text=mis_categorias[i] 
+                    } 
+                }else{ 
+                    document.guardar_items.producto.length = 1 
+                    document.guardar_items.producto.options[0].value = "-" 
+                    document.guardar_items.producto.options[0].text = "-" 
+                } 
+              document.guardar_items.producto.options[0].selected = true 
+              }
+            </script>
+            <script>                       
+              function cambia_comercio(){ 
+                var com
+                com = document.guardar_comercio.com[document.guardar_comercio.com.selectedIndex].value
+                document.getElementById("com_aux").value = com
+                return com    
+                }         
+            </script>
+              <div class="row">
+                <div class="col-md-9">
+                <br>  
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label>Cantidad</label>
+                  <input type="text" class="form-control text-white" id="monto" value='1' name="cantidad" required >
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                <br>  
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label>Precio</label>
+                  <input type="text" class="form-control text-white" id="monto" name="precio" required>
+                </div>
+              </div>
+            
+              <div class="row">
+                <div class="col-md-6">
+                <br>
+                  <label for="exampleTextarea1">Notas</label>
+                  <textarea class="form-control text-white" name="notas" rows="3"></textarea>  
+                </div>
+              </div>
+          </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-outline-danger mr-2" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-outline-success mr-2">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+<footer class="footer"></footer>
+</body>
+
+</html>

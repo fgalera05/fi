@@ -1,0 +1,140 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+  <div class="main-panel">
+    <div class="content-wrapper">
+      <h3 class="page-title"></h3>
+        <form action="/res/{{ anio }}/{{ mes }}/0/#cat" method="get">
+          <button class="btn btn-outline-secondary btn-md">Volver</button>
+        </form>
+        <br>
+      <div class="row">
+        <div class="col-md-4 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">{{ fecha|date:"F Y"}}</h4>
+                 <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                <canvas id="myChart" width="80" height="80"></canvas>
+              <script>
+                const labels = [
+                 
+                ];
+
+                const data = {
+                  labels:{{ nombresTorta|safe}},
+                  datasets: [{
+                    label: '',
+                     backgroundColor: {{ coloresTorta|safe }},
+                    data: {{ coloresPorc|safe }},
+                    borderColor: ['rgb(0,0,0)'
+                  ],
+                  }],
+                };
+
+                const config = {
+                  type: 'doughnut',
+                  data: data,
+                  options: {}
+                };
+
+              </script>
+              <script>
+                const myChart = new Chart(
+                  document.getElementById('myChart'),
+                  config
+                );
+              </script>
+            </div>
+            <br>
+            Fijos
+             <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                <canvas id="myChart2" width="80" height="80"></canvas>
+              <script>
+                const labels2 = [
+                ];
+                const data2 = {
+                  labels:{{ nombresTortaFijos|safe}},
+                  datasets: [{
+                    label: '',
+                     backgroundColor: {{ coloresTortaFijos|safe }},
+                    data: {{ coloresPorcFijos|safe }},
+                    borderColor: ['rgb(0,0,0)'
+                  ],
+                  }],
+                };
+
+                const config2 = {
+                  type: 'doughnut',
+                  data: data2,
+                  options: {}
+                };
+
+              </script>
+              <script>
+                const myChart2 = new Chart(
+                  document.getElementById('myChart2'),
+                  config2
+                );
+              </script>
+            </div>
+            </div>
+
+          </div>
+         
+        </div>
+        <div class="col-md-8 grid-margin stretch-card">
+          <div class="card">
+            <div class="col-lg-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+
+              <h4 id="cat" class="card-title">Presupuesto - [ $ {{ total|intcomma}}]</h4>
+              <p class="card-description"></p>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Categoria</th>
+                      <th>Gastado</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for c in categorias %}
+                      <tr>
+                        <td><a style="color:#ffffff;" href="/presuCategoria/{{ c.userCategoria.idcategoria }}/{{ anio}}/{{mes}}">{{ c.userCategoria.categoria }}</td></a>
+                        <td width="50%">
+                          <div class="progress">
+                            {% if c.userCategoria.saldo >= 0 %}
+                              <div class="progress-bar bg-{{ c.userCategoria.barra }}" role="progressbar" style="width:{% widthratio c.userCategoria.gastos c.userCategoria.presupuesto 100 %}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{% widthratio c.userCategoria.gastos c.userCategoria.presupuesto 100 %}%</div>
+                            {% else %}
+                              <div class="progress-bar bg-danger" role="progressbar" style="width:0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            {% endif %}
+                          </div>
+                        </td>
+                        <td>
+                          $ {{ c.userCategoria.presupuesto|intcomma }}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+ 
+   
+  
+    <!-- content-wrapper ends -->
+    <!-- partial:partials/_footer.html -->
+    <footer class="footer">
+    </footer>
+    <!-- partial -->
+  </div>
+</div>
+</div>
+  </body>
+</html>

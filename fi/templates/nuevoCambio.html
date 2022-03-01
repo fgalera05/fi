@@ -1,0 +1,40 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+<div class="main-panel">
+    <div class="content-wrapper">
+      <h3 class="page-title"></h3>
+        <form action="/home/" method="get">
+          <button class="btn btn-outline-secondary btn-md">Volver</button>
+        </form>
+        <br>
+      <div class="row ">
+       <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+             <h4 class="card-title text-primary">Change</h4>
+            <form  name="f" class="forms-sample" action="/guardarCambio/" method="POST">{% csrf_token %}
+              <div class="form-group">
+                <input type="date" name="fecha" class="text-dark" value="{{ anio }}-{{ mes }}-{{ dia }}">
+              </div>
+              <div class="form-group row">
+                <label for="exampleInputMobile" class="col-sm-3 col-form-label">Cambio</label>
+                <div class="col-sm-9">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text btn-outline-primary text-white">$</span>
+                    </div>
+                    <input type="number" class="form-control text-muted" name="cambio" value="" required>
+                  </div>
+                </div>
+              </div>
+              {%if tipo == 1 %}
+                <button type="submit" name="boton" class="btn btn-outline-primary mr-2" value="guardar">Guardar</button>
+              {% else %}
+                <button type="submit" name="boton" class="btn btn-outline-primary mr-2" value="guardar">Guardar</button>
+              {% endif %}   
+                <button type="submit" class="btn btn-outline-light" name="boton" value="cancelar">Cancelar</button>
+            </form>
+          </div>
+        </div>
+      </div>

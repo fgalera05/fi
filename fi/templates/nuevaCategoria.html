@@ -1,0 +1,49 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+<div class="main-panel">
+    <div class="content-wrapper">
+      <h3 class="page-title"></h3>
+        <form action="/home/" method="post">{% csrf_token %}
+          <button class="btn btn-outline-secondary btn-md">Volver</button>
+        </form>
+        <br>
+      <div class="row ">
+       <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+             <h4 class="card-title text-white">Nueva categoria</h4>
+            <form  name="f" class="forms-sample" action="/guardarCategoria/" method="POST">{% csrf_token %}
+              <div class="form-group row">
+                <label for="exampleInputMobile" class="col-sm-3 col-form-label">Nombre</label>
+                <div class="col-sm-9">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control text-white" name="categoria" required>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="exampleInputMobile" class="col-sm-3 col-form-label"></label>
+                <div class="form-check form-check-flat form-check-warning">
+                  <div class="col-sm-12">
+                    <label class="form-check-label">
+                      <input type="checkbox" class="form-check-input" name="tarjeta">Tarjeta
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="exampleInputMobile" class="col-sm-3 col-form-label"></label>
+                <div class="form-check form-check-flat form-check-blue">
+                  <div class="col-sm-12">
+                    <label class="form-check-label">
+                      <input type="checkbox" class="form-check-input" name="pagoDolar">Dolares
+                    </label>
+                  </div>
+                </div>
+              </div>
+                <button type="submit" class="btn btn-outline-success mr-2">Guardar</button>
+            </form>
+          </div>
+        </div>
+      </div>

@@ -1,0 +1,660 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+<div class="main-panel">
+  <div class="content-wrapper">
+ <div id="mov" class="row ">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      {% if res %}
+      <div class="card-body">
+        <h4 class="card-title">Resumen</h4>
+        <input  name="res" type="hidden" value="res">
+        <div class="table-responsive">
+          <table class="table">
+            <tr >
+              <td colspan="15">
+                <canvas id="myChart" width="100%" height="20%"></canvas>
+                <script>
+                const ctx = document.getElementById('myChart');
+                const etiqueta = ['Dic','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene']
+                               
+                const myChart = new Chart(ctx , {
+                    type: 'line',// Tipo de gráfica
+                    data: {
+                      labels: etiqueta,
+                      datasets: [
+                            {
+                            label: "Presupuesto",
+                            data: {{ presupuesto }}, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                            backgroundColor: 'rgba(34,139,34,1)', // Color de fondo
+                            borderColor: 'rgba(34,139,34,1)', // Color del borde
+                            borderWidth: 2,// Ancho del borde
+                          },
+                          {
+                            label: "Gastos",
+                            data: {{ gastos }}, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                            backgroundColor: 'rgba(255, 0, 0, 1)', // Color de fondo
+                            borderColor: 'rgba(255, 0, 0, 1)', // Color del borde
+                            borderWidth: 2,// Ancho del borde
+                          },
+                          {
+                            label: "",
+                            data: {{ cincuenta }}, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                            backgroundColor: 'rgba(255, 236, 0, 1)', // Color de fondo
+                            borderColor: 'rgba(255, 236, 0, 1)', // Color del borde
+                            borderWidth: 2,// Ancho del borde
+                          },
+                          {
+                            label: "",
+                            data: {{ quince }}, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                            backgroundColor: 'rgba(98, 90, 254, 1)', // Color de fondo
+                            borderColor: 'rgba(98, 90, 254, 1)', // Color del borde
+                            borderWidth: 2,// Ancho del borde
+                          },
+                            ]
+                      },
+                      options: {
+                          scales: {
+                              yAxes: [{
+                                  ticks: {
+                                      beginAtZero: true
+                                  }
+                              }],
+                          },
+                      }
+                  });
+                </script>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+                <tr >
+                  <td></td>
+                    <td class="text-warning">Dic</td>
+                    <td class="text-white">Ene</td>
+                    <td class="text-white">Feb</td>
+                    <td class="text-white">Mar</td>
+                    <td class="text-white">Abr</td>
+                    <td class="text-white">May</td>
+                    <td class="text-warning">Jun</td>
+                    <td class="text-white">Jul</td>
+                    <td class="text-white">Ago</td>
+                    <td class="text-white">Sep</td>
+                    <td class="text-white">Oct</td>
+                    <td class="text-white">Nov</td>
+                    <td class="text-white">Dic</td>
+                    <td class="text-white">Ene {{ anio|add:1}}</td>
+                </tr>
+                <tr>
+                  <td class="text-success"></td>
+                  {% for p in presupuesto %}
+                    <td class="text-success">{{ p|intcomma}}</td>
+                  {% endfor %}
+                </tr>
+                <tr>
+                  <td class="text-success"></td>
+                  {% for p in gastos %}
+                    {% if p == 0%}
+                      <td></td>
+                    {% else %}
+                      <td class="text-danger">{{ p|intcomma|cut:'-'}}</td>
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+                {% for c in categorias %}
+                  <tr>
+                    {% if c.categoria.idcategoria == 10 %}
+                      <td class="text-primary" ><a class="text-primary" href="/presupuestacion/fijos#{{ c.categoria.categoria  }}">{{ c.categoria.categoria  }}</td></a>
+                      {% for v in c.valores %}
+                        <td class="text-primary">{{ v |intcomma}}</td>
+                      {% endfor %}
+                    {% elif c.categoria.tarjeta %}
+                      <td class="text-warning" ><a class="text-warning"  href="/presupuestacion/cards#{{ c.categoria.categoria  }}">{{ c.categoria.categoria  }}</td></a>
+                      {% for v in c.valores %}
+                        {% if v == 0%}
+                          <td></td>
+                        {% else %}
+                          <td class="text-warning">{{ v |intcomma}}</td>
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  </tr>
+                {% endfor %}
+                <tr>
+                  <td class="text-info"><a class="text-info" href="/presupuestacion/others#Otros">Otros</td>
+                  {% for o in otrosPresupuesto %}</a>
+                    {% if o == 0 %}
+                      <td></td>
+                    {% else %}
+                      <td class="text-info">{{ o |intcomma}}</td>
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+                <tr>
+                  <td class="text-primary">Pesos</td>
+                  {% for p in pesos %}
+                    {% if not p.idMov %}
+                      <td><input type="number" min="0" step="any" name="!{{ p.mes }}.{{ p.anio }}." class="form-control"  value="" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                    {% else %}
+                      {% if p.valor == 0 %}
+                        <td><input type="number" min="0" step="any" name="@.{{ p.idMov }}." class="form-control"  value="" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                      {% else %}
+                        <td><input type="text" name="@.{{ p.idMov }}." class="form-control"  value="{{ p.valor }}" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+                <tr>
+                  <td class="text-white">Por cubrir</td>
+                  {% for pc in porCubrir %}
+                    <td class="text-white">{{ pc|intcomma }}</td>
+                  {% endfor %}
+                </tr>
+                 <tr>
+                  <td class="text-sm"></td>
+                  {% for d in dolares %}
+                    {% if d <= tope %}
+                      <td class="text-warning">{{ d|intcomma }}</td>
+                    {% else %}
+                      <td class="text-danger">{{ d|intcomma }}</td>
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+                <tr>
+                  <td class="text-ligth"><a class="text-muted"  href="/presupuestacion/bk#">Bk</td>
+                  {% for pc in bank %}
+                    <td class="text-ligth">{{ pc|intcomma }}</td>
+                  {% endfor %}
+                </tr>
+              </table>
+            </div>
+          </div>
+        {% endif %}
+        <!----FIJOS --->
+        {% if fj %}
+        <div class="card-body">
+        <h4 class="card-title text-primary" id="Fijos">Fijos</h4>
+        <input  name="fijos" type="hidden" value="fijos">
+        <div class="table-responsive">
+          <table class="table">
+            <tr >
+              <td colspan="15">
+                <canvas id="myChart1" width="100%" height="20%"></canvas>
+                <script>
+                const ctx1 = document.getElementById('myChart1');
+                const etiqueta1 = ['Dic','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene']
+                               
+                const myChart1 = new Chart(ctx1 , {
+                    type: 'line',// Tipo de gráfica
+                    data: {
+                      labels: etiqueta1,
+                      datasets: [
+                            {
+                            label: "Presupuesto",
+                            data: {{ presupuestoFijos|safe }}, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                            backgroundColor: 'rgba(34,139,34,1)', // Color de fondo
+                            borderColor: 'rgba(34,139,34,1)', // Color del borde
+                            borderWidth: 2,// Ancho del borde
+                          },
+                          {
+                            label: "Gastos",
+                            data: {{ gastosFijos|safe }}, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                            backgroundColor: 'rgba(255, 0, 0, 1)', // Color de fondo
+                            borderColor: 'rgba(255, 0, 0, 1)', // Color del borde
+                            borderWidth: 2,// Ancho del borde
+                          },
+                            ]
+                      },
+                      options: {
+                          scales: {
+                              yAxes: [{
+                                  ticks: {
+                                      beginAtZero: true
+                                  }
+                              }],
+                          },
+                      }
+                  });
+                </script>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <tr>
+              <td></td>
+              <td class="text-warning">Dic</td>
+              <td class="text-white">Ene</td>
+              <td class="text-white">Feb</td>
+              <td class="text-white">Mar</td>
+              <td class="text-white">Abr</td>
+              <td class="text-white">May</td>
+              <td class="text-warning">Jun</td>
+              <td class="text-white">Jul</td>
+              <td class="text-white">Ago</td>
+              <td class="text-white">Sep</td>
+              <td class="text-white">Oct</td>
+              <td class="text-white">Nov</td>
+              <td class="text-warning">Dic</td>
+              <td class="text-white">Ene {{ anio|add:1}}</td>
+            </tr>
+            <tr>
+              <td class="text-success"></td>
+              {% for p in presupuestoFijos %}
+                <td class="text-success">{{ p|intcomma}}</td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <td class="text-success"></td>
+              {% for p in gastosFijos %}
+                {% if p == 0 %}
+                  <td></td>
+                {% else %}
+                  <td class="text-danger">{{ p|intcomma|cut:'-'}}</td>
+                {% endif %}
+              {% endfor %}
+              <td class="text-warning">Bk</td>
+            </tr>
+            {% for f in personalesFijos %}
+              <tr>
+                <td class="text-muted">{{ f.producto.nombreproducto  }}</td>
+                {% for p in f.valores %}
+                  {% if p.idMov %}
+                    {% if p.mes > mesHoy and p.anio >= anio %}
+                      {% if p.valor == 0%}
+                        <td><input type="text" name="*.{{ p.idMov }}." class="form-control"  value="" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                      {% else %}  
+                        <td><input type="text" name="*.{{ p.idMov }}." class="form-control"  value="{{ p.valor }}" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                      {% endif %}
+                    {% elif p.mes < mesHoy and p.anio > anio %}
+                      <td><input type="text" name="*.{{ p.idMov }}." class="form-control"  value="{{ p.valor }}" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                    {% else %}
+                      {% if p.valor > 0%}
+                        <td class="text-success">{{ p.valor |intcomma}}</td>
+                      {% else %}
+                        <td class="text-danger">{{ p.valor |intcomma|cut:'-'}}</td>
+                      {% endif %}
+                    {% endif %}
+                  {% else %}
+                    {% if p.mes > mesHoy and p.anio >= anio %}
+                      <td><input type="number" min="0" step="any" name="#{{ f.categoria.idcategoria}}.{{ f.producto.idproducto }}.{{ p.mes }}.{{ p.anio }}." class="form-control"  value="" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                    {% elif p.mes < mesHoy and p.anio > anio %}
+                      <td><input type="number" min="0" step="any" name="#{{ f.categoria.idcategoria}}.{{ f.producto.idproducto }}.{{ p.mes }}.{{ p.anio }}." class="form-control"  value="" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+                {% if f.banco %}
+                  <input type="hidden" name="b.{{f.idPersonal  }}" value="0" />
+                  <td><input type="checkbox"  name="b.{{ f.idPersonal   }}" value="1"checked></td>
+                {% else %}
+                  <input type="hidden" name="b.{{ f.idPersonal   }}" value="0" />
+                  <td><input type="checkbox"  name="b.{{ f.idPersonal   }}" value="1"></td>
+                {% endif %}
+                {% if f.visible %}
+                  <input type="hidden" name="v.{{ f.idPersonal  }}" value="0" />
+                  <td><input type="checkbox"  name="v.{{ f.idPersonal  }}" value="1" checked ></td>
+                {% else %}
+                  <input type="hidden" name="v.{{ f.idPersonal  }}" value="0" />
+                  <td><input type="checkbox"  name="v.{{ f.idPersonal  }}" value="1"></td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+      {% endif %}
+    {% if cards %}
+    <input  name="cards" type="hidden" value="cards">
+<!-- TARJETAS -->
+      {% for t in tarjetas %}
+      <div class="card-body">
+        <h4 class="card-title text-warning" id="{{ t.categoria }}">{{ t.categoria }}</h4>
+        <div class="table-responsive">
+          <table class="table">
+            <tr >
+              <td colspan="15">
+                <canvas id="myChart{{ t.nroChart}}" width="100%" height="20%"></canvas>
+                <script>
+                const ctx{{ t.nroChart}} = document.getElementById('myChart{{ t.nroChart}}');
+                const etiqueta{{  t.nroChart }} = ['Dic','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene']
+                               
+                const myChart{{  t.nroChart}} = new Chart(ctx{{  t.nroChart}} , {
+                    type: 'line',// Tipo de gráfica
+                    data: {
+                      labels: etiqueta{{  t.nroChart}},
+                      datasets: [
+                            {
+                            label: "Presupuesto",
+                            data: {{ t.listaPresupuesto|safe }}, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                            backgroundColor: 'rgba(34,139,34,1)', // Color de fondo
+                            borderColor: 'rgba(34,139,34,1)', // Color del borde
+                            borderWidth: 2,// Ancho del borde
+                          },
+                          {
+                            label: "Gastos",
+                            data: {{ t.listaGastos|safe }}, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                            backgroundColor: 'rgba(255, 0, 0, 1)', // Color de fondo
+                            borderColor: 'rgba(255, 0, 0, 1)', // Color del borde
+                            borderWidth: 2,// Ancho del borde
+                          },
+                            ]
+                      },
+                      options: {
+                          scales: {
+                              yAxes: [{
+                                  ticks: {
+                                      beginAtZero: true
+                                  }
+                              }],
+                          },
+                      }
+                  });
+                </script>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <tr>
+              <td></td>
+              <td class="text-warning">Dic</td>
+              <td class="text-white">Ene</td>
+              <td class="text-white">Feb</td>
+              <td class="text-white">Mar</td>
+              <td class="text-white">Abr</td>
+              <td class="text-white">May</td>
+              <td class="text-warning">Jun</td>
+              <td class="text-white">Jul</td>
+              <td class="text-white">Ago</td>
+              <td class="text-white">Sep</td>
+              <td class="text-white">Oct</td>
+              <td class="text-white">Nov</td>
+              <td class="text-white">Dic</td>
+              <td class="text-white">Ene {{ anio|add:1}}</td>
+            </tr>
+            <tr>
+              <td class="text-success"></td>
+              {% for p in  t.listaPresupuesto %}
+                {% if p == 0 %}
+                  <td></td>
+                {% else %}
+                  <td class="text-success">{{ p|intcomma}}</td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+            <tr>
+              <td class="text-success"></td>
+              {% for p in t.listaGastos %}
+                {% if p == 0 %}
+                  <td></td>
+                {% else %}
+                  <td class="text-danger">{{ p|intcomma|cut:'-'}}</td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+            {% if t.pagoDolar %}
+            <tr>
+              <td class="text-success"></td>
+              {% for p in dolarTarjeta %}
+                {% if p.valor == 0 %}
+                  <td></td>
+                {% else %}
+                  <td class="text-primary">{{ p.valor|intcomma|cut:'-'}}</td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+            {% endif %}
+            {% for f in t.listaPersonalesTarjeta %}
+            <tr>
+              <td class="text-muted">{{ f.producto.nombreproducto  }}</td>
+              {% for p in f.valores %}
+                {% if p.idMov %}
+                  {% if p.mes > mesHoy and p.anio >= anio %}
+                    {% if p.valor == 0%}
+                      <td><input type="text" name="&.{{ p.idMov }}." class="form-control"  value="" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                    {% else %}  
+                      <td><input type="text" name="&.{{ p.idMov }}." class="form-control"  value="{{ p.valor }}" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                    {% endif %}
+                  {% elif p.mes < mesHoy and p.anio > anio %}
+                    <td><input type="text" name="&.{{ p.idMov }}." class="form-control"  value="{{ p.valor }}" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                  {% else %}
+                    {% if p.valor > 0%}
+                      <td class="text-muted">{{ p.valor |intcomma}}</td>
+                    {% else %}
+                      <td class="text-danger">{{ p.valor |intcomma|cut:'-'}}</td>
+                    {% endif %}
+                  {% endif %}
+                {% else %}
+                  {% if p.mes > mesHoy and p.anio >= anio %}
+                    <td><input type="number" min="0" step="any" name="${{ f.categoria.idcategoria}}.{{ f.producto.idproducto }}.{{ p.mes }}.{{ p.anio }}." class="form-control"  value="" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                  {% elif p.mes < mesHoy and p.anio > anio %}
+                    <td><input type="number" min="0" step="any" name="${{ f.categoria.idcategoria}}.{{ f.producto.idproducto }}.{{ p.mes }}.{{ p.anio }}." class="form-control"  value="" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                  {% else %}
+                      <td></td>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+              {% if f.visible %}
+                <input type="hidden" name="v.{{ f.idPersonal  }}" value="0" />
+                <td><input type="checkbox"  name="v.{{ f.idPersonal  }}" value="1" checked ></td>
+              {% else %}
+                <input type="hidden" name="v.{{ f.idPersonal  }}" value="0" />
+                <td><input type="checkbox"  name="v.{{ f.idPersonal  }}" value="1"></td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+          </table>
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
+    
+<!-- otras -->
+{% if others %}
+<input  name="others" type="hidden" value="others">
+      <div class="card-body">
+        <h4 class="card-title text-info" id="Otros">Otras</h4>
+        <div class="table-responsive">
+          <table class="table">
+            <tr >
+              <td colspan="15">
+                <canvas id="myChart10" width="100%" height="20%"></canvas>
+                <script>
+                const ctx10 = document.getElementById('myChart10');
+                const etiqueta10 = ['Dic','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene']
+                               
+                const myChart10= new Chart(ctx10 , {
+                    type: 'line',// Tipo de gráfica
+                    data: {
+                      labels: etiqueta10,
+                      datasets: [
+                            {
+                            label: "Presupuesto",
+                            data: {{ otrosPresupuesto|safe }}, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                            backgroundColor: 'rgba(34,139,34,1)', // Color de fondo
+                            borderColor: 'rgba(34,139,34,1)', // Color del borde
+                            borderWidth: 2,// Ancho del borde
+                          },
+                          {
+                            label: "Gastos",
+                            data: {{ otrosGastos|safe }}, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                            backgroundColor: 'rgba(255, 0, 0, 1)', // Color de fondo
+                            borderColor: 'rgba(255, 0, 0, 1)', // Color del borde
+                            borderWidth: 2,// Ancho del borde
+                          },
+                            ]
+                      },
+                      options: {
+                          scales: {
+                              yAxes: [{
+                                  ticks: {
+                                      beginAtZero: true
+                                  }
+                              }],
+                          },
+                      }
+                  });
+                </script>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <tr>
+              <td></td>
+              <td class="text-warning">Dic</td>
+              <td class="text-white">Ene</td>
+              <td class="text-white">Feb</td>
+              <td class="text-white">Mar</td>
+              <td class="text-white">Abr</td>
+              <td class="text-white">May</td>
+              <td class="text-warning">Jun</td>
+              <td class="text-white">Jul</td>
+              <td class="text-white">Ago</td>
+              <td class="text-white">Sep</td>
+              <td class="text-white">Oct</td>
+              <td class="text-white">Nov</td>
+              <td class="text-white">Dic</td>
+              <td class="text-white">Ene {{ anio|add:1}}</td>
+            </tr>
+            <tr>
+              <td class="text-success"></td>
+              {% for p in  otrosPresupuesto %}
+                {% if p == 0 %}
+                  <td></td>
+                {% else %}
+                  <td class="text-success">{{ p|intcomma}}</td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+            <tr>
+              <td class="text-success"></td>
+              {% for p in otrosGastos %}
+                {% if p == 0 %}
+                  <td></td>
+                {% else %}
+                  <td class="text-danger">{{ p|intcomma|cut:'-'}}</td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+            {% for c in otrosLista %}
+              <tr>
+                <td class="text-muted" >{{ c.userCategoria.categoria  }}</td>
+                {% for p in c.valores %}
+                  {% if p.idMov %}
+                    {% if p.mes > mesHoy and p.anio >= anio %}
+                      {% if p.valor == 0%}
+                        <td><input type="text" name="?.{{ p.idMov }}." class="form-control"  value="" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                      {% else %}  
+                        <td><input type="text" name="?.{{ p.idMov }}." class="form-control"  value="{{ p.valor }}" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                      {% endif %}
+                    {% elif p.mes < mesHoy and p.anio > anio %}
+                      <td><input type="text" name="?.{{ p.idMov }}." class="form-control"  value="{{ p.valor }}" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                    {% else %}
+                      {% if p.valor > 0%}
+                        <td class="text-muted">{{ p.valor |intcomma}}</td>
+                      {% else %}
+                        <td class="text-danger">{{ p.valor |intcomma|cut:'-'}}</td>
+                      {% endif %}
+                    {% endif %}
+                  {% else %}
+                    {% if p.mes > mesHoy and p.anio >= anio %}
+                      <td><input type="number" min="0" step="any" name="~{{ c.userCategoria.idcategoria}}.{{ p.mes }}.{{ p.anio }}." class="form-control"  value="" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                    {% elif p.mes < mesHoy and p.anio > anio %}
+                      <td><input type="number" min="0" step="any" name="~{{ c.userCategoria.idcategoria}}.{{ p.mes }}.{{ p.anio }}." class="form-control"  value="" style="text-align:left;color:#09ACB7;width: 122%;"></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+              {% if c.esVisible %}
+                <input type="hidden" name="^.{{ c.idUserCat }}" value="0" />
+                <td><input type="checkbox"  name="^.{{ c.idUserCat }}" value="1" checked ></td>
+              {% else %}
+                <input type="hidden" name="^.{{ c.idUserCat }}" value="0" />
+                <td><input type="checkbox"  name="^.{{ c.idUserCat }}" value="1"></td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+      {% endif %}
+      <!-- BK-->
+{% if bk %}
+  <input  name="kk" type="hidden" value="bk">
+      <div class="card-body">
+        <h4 class="card-title text-info" id="Otros">Bk</h4>
+        <div class="table-responsive">
+        <div class="table-responsive">
+          <table class="table">
+            <tr>
+              <td></td>
+              <td class="text-warning">Dic</td>
+              <td class="text-white">Ene</td>
+              <td class="text-white">Feb</td>
+              <td class="text-white">Mar</td>
+              <td class="text-white">Abr</td>
+              <td class="text-white">May</td>
+              <td class="text-warning">Jun</td>
+              <td class="text-white">Jul</td>
+              <td class="text-white">Ago</td>
+              <td class="text-white">Sep</td>
+              <td class="text-white">Oct</td>
+              <td class="text-white">Nov</td>
+              <td class="text-white">Dic</td>
+              <td class="text-white">Ene {{ anio|add:1}}</td>
+            </tr>
+            <tr>
+              <td class="text-success"></td>
+              {% for p in  bank  %}
+                <td class="text-success">{{ p|intcomma}}</td>
+              {% endfor %}
+              <td class="text-warning">Bk</td>
+            </tr>
+            {% for p in  bkProd %}
+              <tr>
+                {% if p.producto %}
+                  <td class="text-muted">{{ p.producto.nombreproducto }}</td>
+                    {% for i in  p.valores %}
+                      {%if i == 0%}
+                        <td></td>
+                      {% else %}
+                        <td class="text-muted">{{ i |intcomma}}</td>
+                      {% endif %}
+                    {% endfor %} 
+                {% else %}
+                  <td class="text-warning">{{ p.categoria }}</td>
+                  {% for i in  p.valores %}
+                    {%if i == 0%}
+                      <td></td>
+                    {% else %}
+                      <td class="text-warning">{{ i |intcomma}}</td>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+                {% if p.banco and p.idPersonal %}
+                  <input type="hidden" name="b.{{ p.idPersonal }}" value="0" />
+                  <td><input type="checkbox"  name="b.{{ p.idPersonal }}" value="1"checked></td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% if guardar %}
+    </form>
+  {% endif %}
+</body>
+      

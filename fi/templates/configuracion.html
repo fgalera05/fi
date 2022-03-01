@@ -1,0 +1,151 @@
+{% load static %}
+{% load humanize %}
+{% include 'menu.html' %}
+<div class="main-panel">
+  <div class="content-wrapper">
+ <div id="mov" class="row ">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title text-white">{{ config }}</h4>
+        <input name="link" type="hidden" value="{{ config }}">
+        <div class="table-responsive">
+        <div class="table-responsive">
+          <table class="table">
+            {% if prod %}
+            <tr>
+              <td></td>
+              <td class="text-muted">Categoria</td>
+              <td class="text-muted">Subcategoria</td>
+              <td><i class="icon-md mdi  mdi-check-all text-warning ml-auto"></i></td>
+            </tr>
+            <tr>
+              {% for p in productos %}
+                <td class="text-muted">{{ p.nombreproducto }}</td>
+                <td class="text-warning">
+                  <select class="form-control text-warning" name="{{p.idproducto}}.categoria">
+                    <option value="{{ p.categoria.idcategoria }}" selected>{{ p.categoria.categoria }}</option>
+                    {% for c in categorias %}
+                    <option value="{{ c.idcategoria }}">{{ c.categoria }}</option>
+                    {% endfor %}
+                  </select>
+                </td>
+                <td class="text-warning">
+                  <select class="form-control text-info" name="{{p.idproducto}}.subCategoria">
+                    {% if p.sub.categoria %}
+                      <option value="{{ p.sub.idcategoria }}" selected>{{ p.sub.categoria }}</option>
+                    {% else %}
+                      <option value="{{ p.sub.idcategoria }}" selected>-</option>
+                    {% endif %}
+                    {% for c in categorias %}
+                      <option value="{{ c.idcategoria }}">{{ c.categoria }}</option>
+                    {% endfor %}
+                  </select>
+                </td>
+                  <td><input type="checkbox"  name="{{p.idproducto}}"></td>
+              </tr>
+              {% endfor %}
+            {% endif %}
+            {% if fijos %}
+            <tr>
+              <td></td>
+              <td class="text-warning">Bk</td>
+              <td class="text-success">Visible</td>
+            </tr>
+            <tr>
+              {% for p in personalesFijos %}
+                <td class="text-muted">{{ p.producto.nombreproducto }}</td>
+                {% if p.banco %}
+                  <input type="hidden" name="b.{{ p.idPersonal  }}" value="0" />
+                  <td><input type="checkbox"  name="b.{{ p.idPersonal  }}" value="1" checked ></td>
+                {% else %}
+                  <input type="hidden" name="b.{{ p.idPersonal  }}" value="0" />
+                  <td><input type="checkbox"  name="b.{{ p.idPersonal  }}" value="1"></td>
+                {% endif %}
+                {% if p.visible %}
+                  <input type="hidden" name="v.{{ p.idPersonal  }}" value="0" />
+                  <td><input type="checkbox"  name="v.{{ p.idPersonal  }}" value="1" checked ></td>
+                {% else %}
+                  <input type="hidden" name="v.{{ p.idPersonal  }}" value="0" />
+                  <td><input type="checkbox"  name="v.{{ p.idPersonal  }}" value="1"></td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            {% endif %}
+            {% if tarjeta %}
+              {%for t in tarjetas %}
+              <tr>
+                <td></td>
+                <td></td>
+                <td class="text-success">Visible</td>
+                <td></td>
+              </tr>
+              <tr>
+                {% for p in t %}
+                  <td class="text-muted">{{ p.producto.nombreproducto }}</td>
+                  <td class="text-warning">{{ p.categoria.categoria }}</td>
+                  {% if p.visible %}
+                    <input type="hidden" name="v.{{ p.idPersonal  }}" value="0" />
+                    <td><input type="checkbox"  name="v.{{ p.idPersonal  }}" value="1" checked ></td>
+                  {% else %}
+                    <input type="hidden" name="v.{{ p.idPersonal  }}" value="0" />
+                    <td><input type="checkbox"  name="v.{{ p.idPersonal  }}" value="1"></td>
+                  {% endif %}
+                  <td><a style="color:#FF0000;" href="/deletePersonal/{{ p.idPersonal }}/" class="confirmation"><i class="mdi mdi-delete"></i></a></td>
+                </tr>
+                {% endfor %}
+              {% endfor %}
+              <script type="text/javascript">
+                var elems = document.getElementsByClassName('confirmation');
+                var confirmIt = function (e) {
+                    if (!confirm('Está seguro de eliminar?')) e.preventDefault();
+                };
+                for (var i = 0, l = elems.length; i < l; i++) {
+                    elems[i].addEventListener('click', confirmIt, false);
+                }
+            </script>
+            {% endif %}
+            {% if categoria %}
+            <tr>
+              <td></td>
+              <td class="text-success">Visible</td>
+              <td class="text-warning">Tarjeta</td>
+              <td class="text-danger">Dolar</td>
+            </tr>
+            <tr>
+              {% for p in MisCategorias %}
+                <td class="text-muted">{{ p.userCategoria.categoria }}</td>
+                {% if p.esVisible %}
+                  <input type="hidden" name="u.{{ p.idUserCat  }}" value="0" />
+                  <td><input type="checkbox"  name="u.{{ p.idUserCat  }}" value="1" checked ></td>
+                {% else %}
+                  <input type="hidden" name="u.{{ p.idUserCat  }}" value="0" />
+                  <td><input type="checkbox"  name="u.{{ p.idUserCat  }}" value="1"></td>
+                {% endif %}
+                {% if p.userCategoria.tarjeta %}
+                  <input type="hidden" name="t.{{ p.idUserCat  }}" value="0" />
+                  <td><input type="checkbox"  name="t.{{ p.idUserCat  }}" value="1" checked ></td>
+                {% else %}
+                  <input type="hidden" name="t.{{ p.idUserCat  }}" value="0" />
+                  <td><input type="checkbox"  name="t.{{ p.idUserCat  }}" value="1"></td>
+                {% endif %}
+                {% if p.userCategoria.pagoDolar %}
+                  <input type="hidden" name="d.{{ p.idUserCat  }}" value="0" />
+                  <td><input type="checkbox"  name="d.{{ p.idUserCat  }}" value="1" checked ></td>
+                {% else %}
+                  <input type="hidden" name="d.{{ p.idUserCat  }}" value="0" />
+                  <td><input type="checkbox"  name="d.{{ p.idUserCat  }}" value="1"></td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            {% endif %}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% if guardarConfig %}
+    </form>
+  {% endif %}
+</body>
+      
